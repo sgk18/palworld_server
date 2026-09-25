@@ -3,4 +3,5 @@ palworld
 !charts/*
 values*.yaml
 .env
+.env.*
 .vscode

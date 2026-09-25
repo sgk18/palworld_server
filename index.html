@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Palworld Dedicated Server | Live Status Dashboard</title>
-  <meta name="description" content="Real-time status monitor, player count, connection details, and server metrics for Palworld Dedicated Server on Azure.">
+  <title>Palworld Azure Dedicated Server | Live Status & Power Dashboard</title>
+  <meta name="description" content="Real-time Palworld Azure dedicated server monitor, live player roster, connection details, and cloud power controls.">
   
-  <!-- Modern Typography from Google Fonts -->
+  <!-- Modern Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -14,38 +14,30 @@
   <style>
     :root {
       --bg-dark: #080b12;
-      --bg-card: rgba(15, 23, 42, 0.72);
+      --bg-card: rgba(15, 23, 42, 0.75);
       --bg-card-hover: rgba(30, 41, 59, 0.85);
-      --bg-glass: rgba(255, 255, 255, 0.03);
       --border-card: rgba(255, 255, 255, 0.08);
-      --border-highlight: rgba(56, 189, 248, 0.28);
+      --border-highlight: rgba(56, 189, 248, 0.35);
       
       --accent-primary: #38bdf8;
       --accent-secondary: #818cf8;
       --accent-emerald: #10b981;
       --accent-amber: #f59e0b;
       --accent-rose: #f43f5e;
-      --accent-cyan: #06b6d4;
       
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --text-dim: #64748b;
       
-      --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-sans: 'Outfit', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
       
-      --shadow-glow: 0 0 35px -5px rgba(56, 189, 248, 0.25);
-      --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: var(--bg-dark);
@@ -53,47 +45,33 @@
       font-family: var(--font-sans);
       min-height: 100vh;
       overflow-x: hidden;
-      position: relative;
       line-height: 1.5;
     }
 
-    /* Ambient background gradient meshes */
+    /* Ambient lighting */
     .ambient-glow {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       pointer-events: none;
       z-index: 0;
-      overflow: hidden;
     }
-
-    .glow-orb-1 {
+    .glow-1 {
       position: absolute;
-      top: -15%;
-      right: 10%;
-      width: 650px;
-      height: 650px;
-      background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, rgba(129, 140, 248, 0.05) 50%, transparent 70%);
-      filter: blur(60px);
-      animation: floatOrb 18s ease-in-out infinite alternate;
+      top: -10%;
+      right: 5%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.14) 0%, transparent 70%);
+      filter: blur(80px);
     }
-
-    .glow-orb-2 {
+    .glow-2 {
       position: absolute;
       bottom: -10%;
       left: 5%;
-      width: 550px;
-      height: 550px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.04) 50%, transparent 70%);
-      filter: blur(60px);
-      animation: floatOrb 22s ease-in-out infinite alternate-reverse;
-    }
-
-    @keyframes floatOrb {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(40px, 30px) scale(1.08); }
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
+      filter: blur(80px);
     }
 
     .container {
@@ -101,15 +79,15 @@
       z-index: 1;
       max-width: 1100px;
       margin: 0 auto;
-      padding: 2.5rem 1.5rem 4rem;
+      padding: 2.5rem 1.5rem 5rem;
     }
 
-    /* Header Section */
+    /* Header */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
       padding-bottom: 1.5rem;
       border-bottom: 1px solid var(--border-card);
     }
@@ -121,8 +99,8 @@
     }
 
     .brand-icon {
-      width: 52px;
-      height: 52px;
+      width: 50px;
+      height: 50px;
       border-radius: var(--radius-md);
       background: linear-gradient(135deg, #0284c7, #6366f1);
       display: flex;
@@ -130,12 +108,7 @@
       justify-content: center;
       box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
     }
-
-    .brand-icon svg {
-      width: 28px;
-      height: 28px;
-      fill: #ffffff;
-    }
+    .brand-icon svg { width: 28px; height: 28px; fill: #ffffff; }
 
     .brand-title h1 {
       font-size: 1.6rem;
@@ -164,11 +137,7 @@
       font-weight: 600;
     }
 
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-    }
+    .header-actions { display: flex; gap: 0.75rem; }
 
     .btn {
       display: inline-flex;
@@ -180,124 +149,165 @@
       padding: 0.55rem 1rem;
       border-radius: var(--radius-sm);
       font-size: 0.875rem;
-      font-weight: 500;
-      font-family: inherit;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.2s;
       backdrop-filter: blur(10px);
     }
-
     .btn:hover {
       background: var(--bg-card-hover);
       border-color: var(--border-highlight);
       transform: translateY(-1px);
     }
-
     .btn-primary {
       background: linear-gradient(135deg, #0284c7, #2563eb);
       border-color: rgba(56, 189, 248, 0.4);
-      color: #ffffff;
-      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+      color: #fff;
+    }
+    .btn-danger {
+      background: rgba(244, 63, 94, 0.15);
+      border-color: rgba(244, 63, 94, 0.4);
+      color: #fda4af;
+    }
+    .btn-danger:hover {
+      background: rgba(244, 63, 94, 0.25);
+    }
+    .btn-success {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #6ee7b7;
+    }
+    .btn-warning {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.4);
+      color: #fcd34d;
+    }
+    .btn-warning:hover {
+      background: rgba(245, 158, 11, 0.25);
+    }
+    .btn-pulse {
+      animation: buttonPulse 2s infinite ease-in-out;
+    }
+    @keyframes buttonPulse {
+      0%, 100% { box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); border-color: rgba(16, 185, 129, 0.4); }
+      50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.75); border-color: rgba(16, 185, 129, 0.9); }
     }
 
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #0369a1, #1d4ed8);
-      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5);
+    /* Modal Overlay */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 11, 18, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-box {
+      background: #0f172a;
+      border: 1px solid var(--border-highlight);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      max-width: 480px;
+      width: 90%;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      transform: scale(0.95);
+      transition: transform 0.25s ease;
+    }
+    .modal-overlay.open .modal-box {
+      transform: scale(1);
+    }
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .modal-body {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
     }
 
-    /* Live Status Banner */
+    /* Status Banner */
     .status-banner {
       background: var(--bg-card);
       border: 1px solid var(--border-card);
       border-radius: var(--radius-lg);
-      padding: 1.5rem 1.8rem;
+      padding: 1.4rem 1.8rem;
       margin-bottom: 2rem;
       backdrop-filter: blur(16px);
-      box-shadow: var(--shadow-card);
       display: flex;
-      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
       position: relative;
-      overflow: hidden;
     }
-
     .status-banner::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0; right: 0;
       height: 3px;
-      width: 100%;
       background: linear-gradient(90deg, var(--accent-emerald), var(--accent-primary), var(--accent-secondary));
     }
 
-    .server-status-pill {
+    .pill {
       display: inline-flex;
       align-items: center;
-      gap: 0.65rem;
-      padding: 0.45rem 1rem;
+      gap: 0.6rem;
+      padding: 0.4rem 0.9rem;
       border-radius: 9999px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 700;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      background: rgba(16, 185, 129, 0.12);
+      background: rgba(16, 185, 129, 0.15);
       color: var(--accent-emerald);
       border: 1px solid rgba(16, 185, 129, 0.3);
     }
-
-    .server-status-pill.offline {
-      background: rgba(244, 63, 94, 0.12);
+    .pill.offline {
+      background: rgba(244, 63, 94, 0.15);
       color: var(--accent-rose);
       border-color: rgba(244, 63, 94, 0.3);
     }
-
-    .pulse-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background-color: currentColor;
-      box-shadow: 0 0 10px currentColor;
-      animation: pulseAnim 1.8s infinite;
+    .pill.starting {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border-color: rgba(245, 158, 11, 0.3);
     }
 
-    @keyframes pulseAnim {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.25); }
-      100% { opacity: 1; transform: scale(1); }
+    .pulse {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+      animation: pulseAnim 1.6s infinite;
     }
+    @keyframes pulseAnim { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-    .banner-stats {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
+    .stats-row { display: flex; gap: 2rem; flex-wrap: wrap; }
+    .stat-box { display: flex; flex-direction: column; }
+    .stat-lbl { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600; }
+    .stat-val { font-size: 1.15rem; font-weight: 700; font-family: var(--font-mono); }
 
-    .stat-mini {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .stat-mini .label {
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-    }
-
-    .stat-mini .value {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text-main);
-      font-family: var(--font-mono);
-    }
-
-    /* Grid Layout */
-    .dashboard-grid {
+    /* Grid */
+    .grid {
       display: grid;
       grid-template-columns: repeat(12, 1fr);
       gap: 1.5rem;
@@ -308,944 +318,1075 @@
       background: var(--bg-card);
       border: 1px solid var(--border-card);
       border-radius: var(--radius-lg);
-      padding: 1.6rem;
+      padding: 1.5rem;
       backdrop-filter: blur(16px);
-      box-shadow: var(--shadow-card);
-      transition: border-color 0.2s ease, transform 0.2s ease;
     }
-
-    .card:hover {
-      border-color: var(--border-highlight);
-    }
-
     .card-title {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--text-muted);
-      margin-bottom: 1.2rem;
+      margin-bottom: 1rem;
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
     }
 
-    /* Quick Connect Card (Span 7) */
-    .card-connect {
-      grid-column: span 7;
-    }
+    .col-7 { grid-column: span 7; }
+    .col-5 { grid-column: span 5; }
+    .col-12 { grid-column: span 12; }
+    .col-4 { grid-column: span 4; }
 
-    /* Player Count Card (Span 5) */
-    .card-players {
-      grid-column: span 5;
-    }
-
-    /* Metrics Cards (Span 4 each) */
-    .card-metric {
-      grid-column: span 4;
-    }
-
-    /* Players Table Card (Span 12) */
-    .card-full {
-      grid-column: span 12;
-    }
-
-    /* Connect Box Styles */
-    .connect-row {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .field-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
+    /* Connection Fields */
+    .field-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.3rem; display: block; }
     .copy-box {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      background: rgba(0, 0, 0, 0.35);
+      align-items: center;
+      background: rgba(0, 0, 0, 0.4);
       border: 1px solid var(--border-card);
       border-radius: var(--radius-sm);
-      padding: 0.7rem 0.9rem;
+      padding: 0.65rem 0.9rem;
       font-family: var(--font-mono);
       font-size: 0.95rem;
-      color: var(--text-main);
-      transition: all 0.2s ease;
+      margin-bottom: 0.9rem;
     }
-
-    .copy-box:hover {
-      border-color: rgba(56, 189, 248, 0.4);
-      background: rgba(0, 0, 0, 0.5);
-    }
-
     .copy-btn {
       background: transparent;
       border: none;
       color: var(--accent-primary);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.8rem;
-      font-family: var(--font-sans);
       font-weight: 600;
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      transition: background 0.15s ease;
-    }
-
-    .copy-btn:hover {
-      background: rgba(56, 189, 248, 0.15);
-    }
-
-    .toggle-visibility-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 0.2rem;
+      font-size: 0.8rem;
       display: flex;
       align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
     }
+    .copy-btn:hover { background: rgba(56, 189, 248, 0.15); }
 
-    .toggle-visibility-btn:hover {
-      color: var(--text-main);
-    }
-
-    /* Player Radial / Progress */
+    /* Player Visual */
     .player-visual {
       display: flex;
       align-items: center;
-      gap: 1.8rem;
+      gap: 1.5rem;
     }
-
-    .player-ring-container {
+    .ring-wrap {
       position: relative;
-      width: 110px;
-      height: 110px;
+      width: 100px; height: 100px;
       flex-shrink: 0;
     }
-
-    .player-ring-svg {
-      transform: rotate(-90deg);
-      width: 100%;
-      height: 100%;
-    }
-
-    .player-ring-bg {
+    .ring-svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+    .ring-bg { fill: none; stroke: rgba(255, 255, 255, 0.08); stroke-width: 9; }
+    .ring-fill {
       fill: none;
-      stroke: rgba(255, 255, 255, 0.07);
-      stroke-width: 9;
-    }
-
-    .player-ring-fill {
-      fill: none;
-      stroke: url(#cyanGradient);
+      stroke: var(--accent-primary);
       stroke-width: 9;
       stroke-linecap: round;
-      stroke-dasharray: 283;
-      stroke-dashoffset: 212;
-      transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      stroke-dasharray: 263.89;
+      stroke-dashoffset: 263.89;
+      transition: stroke-dashoffset 0.8s ease;
     }
-
-    .ring-text {
+    .ring-center {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-    }
-
-    .ring-number {
-      font-size: 1.5rem;
-      font-weight: 800;
-      font-family: var(--font-mono);
-      line-height: 1;
-      color: var(--text-main);
-    }
-
-    .ring-max {
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      font-family: var(--font-mono);
-    }
-
-    .player-info-list {
+      inset: 0;
       display: flex;
       flex-direction: column;
-      gap: 0.7rem;
-      width: 100%;
-    }
-
-    .info-item {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.07);
-      padding-bottom: 0.35rem;
-    }
-
-    .info-item .item-label {
-      color: var(--text-muted);
-    }
-
-    .info-item .item-val {
-      font-weight: 600;
-      font-family: var(--font-mono);
-      color: var(--text-main);
-    }
-
-    /* Player Table */
-    .players-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.875rem;
-    }
-
-    .players-table th {
-      text-align: left;
-      padding: 0.75rem 1rem;
-      color: var(--text-dim);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid var(--border-card);
-    }
-
-    .players-table td {
-      padding: 0.9rem 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      color: var(--text-main);
-    }
-
-    .players-table tr:hover td {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: var(--text-muted);
-    }
-
-    .empty-state svg {
-      width: 44px;
-      height: 44px;
-      margin-bottom: 0.8rem;
-      stroke: var(--text-dim);
-      opacity: 0.6;
-    }
-
-    /* Modal / Settings Drawer */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
-      z-index: 99;
-      display: none;
       align-items: center;
       justify-content: center;
-      padding: 1.5rem;
+      font-family: var(--font-mono);
     }
+    .ring-num { font-size: 1.6rem; font-weight: 800; line-height: 1; }
+    .ring-max { font-size: 0.7rem; color: var(--text-dim); }
 
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal-window {
-      background: #0f172a;
+    /* Power Control Bar */
+    .power-panel {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.8));
       border: 1px solid var(--border-highlight);
       border-radius: var(--radius-lg);
-      width: 100%;
-      max-width: 520px;
-      padding: 2rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-      animation: modalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes modalPop {
-      0% { transform: scale(0.95); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .modal-header {
+      padding: 1.5rem;
+      margin-bottom: 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
     }
-
-    .modal-header h3 {
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    .input-control {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border-card);
-      border-radius: var(--radius-sm);
-      padding: 0.7rem 0.9rem;
-      color: var(--text-main);
-      font-family: inherit;
-      font-size: 0.9rem;
-      margin-bottom: 1.1rem;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .input-control:focus {
-      border-color: var(--accent-primary);
-    }
-
-    /* Toast Notification */
-    .toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: #0f172a;
-      color: #ffffff;
-      border: 1px solid var(--accent-emerald);
-      padding: 0.75rem 1.25rem;
-      border-radius: var(--radius-sm);
-      font-size: 0.875rem;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-      z-index: 1000;
+    .power-actions { display: flex; align-items: center; gap: 0.8rem; }
+    .schedule-box {
       display: flex;
       align-items: center;
       gap: 0.6rem;
-      transform: translateY(100px);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-card);
+    }
+    .time-input {
+      background: transparent;
+      border: 1px solid var(--border-card);
+      color: var(--accent-primary);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    /* Player Table */
+    .players-table { width: 100%; border-collapse: collapse; }
+    .players-table th {
+      text-align: left;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-card);
+    }
+    .players-table td {
+      padding: 0.8rem 0.8rem;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+    .empty-state { text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 0.875rem; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      background: #0f172a;
+      border: 1px solid var(--accent-emerald);
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
       opacity: 0;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(20px);
+      transition: all 0.25s;
+      z-index: 1000;
       pointer-events: none;
     }
+    .toast.show { opacity: 1; transform: translateY(0); }
 
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    /* Responsive */
     @media (max-width: 900px) {
-      .card-connect, .card-players {
-        grid-column: span 12;
-      }
-      .card-metric {
-        grid-column: span 6;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .card-metric {
-        grid-column: span 12;
-      }
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-      .status-banner {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      .col-7, .col-5, .col-4 { grid-column: span 12; }
+      header, .status-banner, .power-panel { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Ambient glowing lighting -->
   <div class="ambient-glow">
-    <div class="glow-orb-1"></div>
-    <div class="glow-orb-2"></div>
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
   </div>
 
   <div class="container">
+    
     <!-- Header -->
     <header>
       <div class="brand">
         <div class="brand-icon">
-          <!-- Pal Sphere / Palworld Glyph -->
           <svg viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" stroke="#ffffff" stroke-width="2" fill="none" />
-            <circle cx="12" cy="12" r="4" fill="#ffffff" />
-            <path d="M2 12h6M16 12h6" stroke="#ffffff" stroke-width="2" />
+            <circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="2" fill="none"/>
+            <circle cx="12" cy="12" r="4" fill="#fff"/>
+            <path d="M2 12h6M16 12h6" stroke="#fff" stroke-width="2"/>
           </svg>
         </div>
         <div class="brand-title">
           <h1 id="uiServerName">Palworld Dedicated Server</h1>
           <p>
             <span>Microsoft Azure Cloud</span>
-            <span class="badge-azure">Ubuntu 22.04 LTS</span>
+            <span class="badge-azure">Central India (Pune)</span>
+            <span class="badge-azure">Standard_D2as_v4</span>
           </p>
         </div>
       </div>
       <div class="header-actions">
-        <button class="btn" id="btnRefresh" onclick="fetchServerStatus(true)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button class="btn btn-success" id="btnHeaderStart" onclick="handlePowerAction('start')" title="Start Azure VM & Palworld Server">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          <span id="headerStartLabel">Start Server</span>
+        </button>
+        <button class="btn btn-danger" id="btnHeaderStop" onclick="requestPowerAction('stop')" title="Turn off Azure VM & stop compute billing">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          </svg>
+          <span id="headerStopLabel">Turn Off Server</span>
+        </button>
+        <button class="btn btn-warning" id="btnHeaderRestart" onclick="requestPowerAction('restart')" title="Reboot Azure VM & Palworld server">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+          </svg>
+          <span id="headerRestartLabel">Restart</span>
+        </button>
+        <button class="btn" id="btnRefresh" onclick="fetchLiveStatus(true)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
           </svg>
           <span id="refreshLabel">Refresh</span>
         </button>
-        <button class="btn btn-primary" onclick="openSettingsModal()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-          Configure
-        </button>
       </div>
     </header>
 
-    <!-- Real-time Status Banner -->
+    <!-- Cloud Power & 1-Year Free Credit Preserver Bar -->
+    <div class="power-panel">
+      <div>
+        <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.3rem;">
+          <span style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-dim);">VM POWER STATE</span>
+          <span id="powerStateBadge" style="font-size: 0.75rem; font-weight: 700; color: var(--accent-emerald);">RUNNING</span>
+        </div>
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+          Schedule: <strong style="color: var(--accent-primary);" id="displaySchedule">08:00 AM – 12:00 AM IST (Midnight)</strong>
+        </div>
+      </div>
+
+      <div class="power-actions">
+        <!-- Dual Schedule Changer (Start & Stop Times) -->
+        <div class="schedule-box">
+          <span style="font-size: 0.72rem; color: var(--text-dim); font-weight: 700;">DAILY ACTIVE:</span>
+          <input type="time" id="inputStartTime" class="time-input" value="08:00" title="Start Time (e.g. 08:00 AM)">
+          <span style="font-size: 0.72rem; color: var(--text-dim); font-weight: 700;">TO</span>
+          <input type="time" id="inputStopTime" class="time-input" value="00:00" title="Stop Time (e.g. 12:00 AM Midnight)">
+          <button class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.75rem;" onclick="updateAutoShutdown()">Save Schedule</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Status Banner -->
     <div class="status-banner">
-      <div style="display: flex; align-items: center; gap: 1rem;">
-        <div class="server-status-pill" id="statusPill">
-          <span class="pulse-dot"></span>
+      <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <div class="pill" id="statusPill">
+          <span class="pulse"></span>
           <span id="statusText">ONLINE</span>
         </div>
+        <!-- Quick Start Button directly in banner when server is offline -->
+        <button class="btn btn-success btn-pulse" id="bannerStartBtn" onclick="handlePowerAction('start')" style="display: none; padding: 0.35rem 0.85rem; font-size: 0.8rem;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          <span id="bannerStartText">Start Server Now</span>
+        </button>
+        <!-- Quick Stop Button directly in banner when server is online -->
+        <button class="btn btn-danger" id="bannerStopBtn" onclick="requestPowerAction('stop')" style="display: none; padding: 0.35rem 0.85rem; font-size: 0.8rem;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          </svg>
+          Turn Off Server
+        </button>
         <div style="font-size: 0.85rem; color: var(--text-muted);" id="versionText">
-          Palworld v0.4.x (Docker)
+          Palworld Dedicated Server (Healthy)
         </div>
       </div>
-      
-      <div class="banner-stats">
-        <div class="stat-mini">
-          <span class="label">Ping / Latency</span>
-          <span class="value" id="pingValue" style="color: var(--accent-emerald);">24 ms</span>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <span class="stat-lbl">LATENCY / PING</span>
+          <span class="stat-val" id="latencyVal" style="color: var(--accent-emerald);">18 ms</span>
         </div>
-        <div class="stat-mini">
-          <span class="label">Server FPS</span>
-          <span class="value" id="fpsValue">60.0</span>
+        <div class="stat-box">
+          <span class="stat-lbl">VM RAM</span>
+          <span class="stat-val">8 GB</span>
         </div>
-        <div class="stat-mini">
-          <span class="label">Uptime</span>
-          <span class="value" id="uptimeValue">2d 14h</span>
-        </div>
-        <div class="stat-mini">
-          <span class="label">Auto-Refresh</span>
-          <span class="value" id="countdownValue" style="color: var(--accent-primary);">10s</span>
+        <div class="stat-box">
+          <span class="stat-lbl">AUTO-REFRESH</span>
+          <span class="stat-val" id="countdownVal" style="color: var(--accent-primary);">10s</span>
         </div>
       </div>
     </div>
 
-    <!-- Main Dashboard Grid -->
-    <div class="dashboard-grid">
+    <!-- Grid -->
+    <div class="grid">
       
-      <!-- Card 1: Connection Details & Quick Copy (Port & Password) -->
-      <div class="card card-connect">
+      <!-- Connect Info (Real IP, Port, Password) -->
+      <div class="card col-7">
         <div class="card-title">
-          <span>Server Connection Details</span>
-          <span style="font-size: 0.72rem; color: var(--accent-primary);">UDP Ports Active</span>
+          <span>Connection Details</span>
+          <span style="font-size: 0.72rem; color: var(--accent-emerald);">PORTS OPEN</span>
         </div>
 
-        <div class="connect-row">
-          <!-- Server IP & Game Port -->
-          <div class="field-group">
-            <label class="field-label">DIRECT CONNECT ADDRESS (IP : PORT)</label>
-            <div class="copy-box">
-              <span id="displayConnectAddress">20.120.45.182:8211</span>
-              <button class="copy-btn" onclick="copyToClipboard('displayConnectAddress', 'Server address copied!')">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-                Copy
-              </button>
+        <div>
+          <label class="field-label">DIRECT CONNECT IP : PORT</label>
+          <div class="copy-box">
+            <span id="displayConnectAddress">Connecting to server...</span>
+            <button class="copy-btn" onclick="copyText('displayConnectAddress', 'Address copied to clipboard!')">Copy</button>
+          </div>
+
+          <label class="field-label">SERVER PASSWORD</label>
+          <div class="copy-box">
+            <span id="displayPassword">••••••••••</span>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="copy-btn" style="color: var(--text-muted);" onclick="togglePassword()">Show</button>
+              <button class="copy-btn" onclick="copyRawPassword('Password copied!')">Copy</button>
             </div>
           </div>
 
-          <!-- Server Password with Reveal Toggle -->
-          <div class="field-group">
-            <label class="field-label">SERVER PASSWORD</label>
-            <div class="copy-box">
-              <span id="displayPassword" style="letter-spacing: 0.15em;">••••••••••••</span>
-              <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <button class="toggle-visibility-btn" id="btnTogglePassword" onclick="togglePasswordVisibility()" title="Show/Hide Password">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle cx="12" cy="12" r="3"></circle>
-                  </svg>
-                </button>
-                <button class="copy-btn" onclick="copyPasswordValue('Server password copied!')">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                  </svg>
-                  Copy
-                </button>
-              </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.75rem; margin-top: 0.5rem;">
+            <div style="background: rgba(255,255,255,0.03); padding: 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--border-card);">
+              <span style="font-size: 0.68rem; color: var(--text-dim); display: block; font-weight: 600;">GAME PORT (UDP)</span>
+              <span style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-primary);" id="uiGamePort">8211</span>
+            </div>
+            <div style="background: rgba(255,255,255,0.03); padding: 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--border-card);">
+              <span style="font-size: 0.68rem; color: var(--text-dim); display: block; font-weight: 600;">QUERY PORT (UDP)</span>
+              <span style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-secondary);" id="uiQueryPort">27015</span>
+            </div>
+            <div style="background: rgba(255,255,255,0.03); padding: 0.6rem; border-radius: var(--radius-sm); border: 1px solid var(--border-card);">
+              <span style="font-size: 0.68rem; color: var(--text-dim); display: block; font-weight: 600;">REST API (TCP)</span>
+              <span style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-emerald);" id="uiApiPort">8212</span>
             </div>
           </div>
-
-          <!-- Port Details breakdown -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.25rem;">
-            <div style="background: rgba(255, 255, 255, 0.03); padding: 0.65rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-card);">
-              <span style="font-size: 0.7rem; color: var(--text-dim); display: block; font-weight: 600;">GAME PORT (UDP)</span>
-              <span style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-primary);" id="displayGamePort">8211</span>
-            </div>
-            <div style="background: rgba(255, 255, 255, 0.03); padding: 0.65rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border-card);">
-              <span style="font-size: 0.7rem; color: var(--text-dim); display: block; font-weight: 600;">STEAM QUERY (UDP)</span>
-              <span style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-secondary);" id="displayQueryPort">27015</span>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Card 2: Live Players Counter & Capacity Ring -->
-      <div class="card card-players">
-        <div class="card-title">
-          <span>Active Players</span>
-          <span id="playerBadge" style="color: var(--accent-emerald); font-size: 0.75rem;">Joinable</span>
-        </div>
-
-        <div class="player-visual">
-          <div class="player-ring-container">
-            <svg class="player-ring-svg" viewBox="0 0 100 100">
-              <defs>
-                <linearGradient id="cyanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#38bdf8"/>
-                  <stop offset="100%" stop-color="#10b981"/>
-                </linearGradient>
-              </defs>
-              <circle class="player-ring-bg" cx="50" cy="50" r="42"/>
-              <circle class="player-ring-fill" id="playerRingCircle" cx="50" cy="50" r="42"/>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.8rem; display: flex; align-items: center; gap: 0.5rem; background: rgba(56, 189, 248, 0.06); padding: 0.55rem 0.8rem; border-radius: var(--radius-sm); border: 1px dashed rgba(56, 189, 248, 0.25);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2" style="flex-shrink:0;">
+              <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
             </svg>
-            <div class="ring-text">
-              <div class="ring-number" id="playerCountVal">3</div>
-              <div class="ring-max" id="playerMaxVal">/ 16</div>
+            <span>In Palworld, click <strong>Join Multiplayer Game</strong> & paste this address at bottom.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Tamers & Compact Roster -->
+      <div class="card col-5">
+        <div class="card-title">
+          <span>Active Tamers</span>
+          <span style="font-size: 0.72rem; color: var(--accent-primary);">REAL-TIME</span>
+        </div>
+
+        <div class="player-visual" style="margin-bottom: 0.9rem;">
+          <div class="ring-wrap">
+            <svg class="ring-svg" viewBox="0 0 100 100">
+              <circle class="ring-bg" cx="50" cy="50" r="42"/>
+              <circle class="ring-fill" id="playerRing" cx="50" cy="50" r="42"/>
+            </svg>
+            <div class="ring-center">
+              <span class="ring-num" id="playerCount">0</span>
+              <span class="ring-max">/ 16</span>
             </div>
           </div>
 
-          <div class="player-info-list">
-            <div class="info-item">
-              <span class="item-label">Online Now</span>
-              <span class="item-val" id="detailOnlineCount">3 Players</span>
+          <div style="display: flex; flex-direction: column; gap: 0.45rem; width: 100%;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; border-bottom: 1px dashed rgba(255,255,255,0.08); padding-bottom: 0.25rem;">
+              <span style="color: var(--text-muted);">Online:</span>
+              <strong id="detailPlayersOnline" style="font-family: var(--font-mono);">0 Players</strong>
             </div>
-            <div class="info-item">
-              <span class="item-label">Slots Remaining</span>
-              <span class="item-val" id="detailFreeSlots">13 Slots</span>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem; border-bottom: 1px dashed rgba(255,255,255,0.08); padding-bottom: 0.25rem;">
+              <span style="color: var(--text-muted);">Free Slots:</span>
+              <strong id="detailFreeSlots" style="font-family: var(--font-mono);">16 Slots</strong>
             </div>
-            <div class="info-item">
-              <span class="item-label">Crossplay</span>
-              <span class="item-val" style="color: var(--accent-primary);">Steam, Xbox, PS5, Mac</span>
+            <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+              <span style="color: var(--text-muted);">Crossplay:</span>
+              <span style="color: var(--accent-primary); font-size: 0.8rem; font-weight: 600;">Steam, Xbox, PS5</span>
             </div>
+          </div>
+        </div>
+
+        <div id="playerRosterContainer" style="background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); padding: 0.5rem; border: 1px solid var(--border-card);">
+          <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem;">TAMER ROSTER</div>
+          <div id="playerTableBody" style="font-size: 0.8rem; color: var(--text-muted);">
+            No players currently connected.
+          </div>
+        </div>
+      </div>
+
+      <!-- Optimized Azure Cloud Cost & Leftover Credits Preserver -->
+      <div class="card col-12" style="border: 1px solid rgba(56, 189, 248, 0.3); background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.55));">
+        <div class="card-title">
+          <span style="display: flex; align-items: center; gap: 0.5rem; color: #fff; font-size: 0.88rem;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Azure Cloud Cost & Resource Budget Preserver
+          </span>
+          <span class="badge-azure" style="border-color: rgba(16, 185, 129, 0.4); color: var(--accent-emerald);">
+            1-Year Free Credit Optimizer
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+          
+          <!-- Tile 1: Remaining Credits -->
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 1.1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <span style="font-size: 0.7rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">LEFTOVER CREDITS</span>
+              <span style="font-size: 0.72rem; color: var(--accent-emerald); font-weight: 700;" id="creditsPercentBadge">94.2% INTACT</span>
+            </div>
+            <div style="font-size: 1.45rem; font-weight: 800; font-family: var(--font-mono); color: #fff; margin-bottom: 0.2rem;" id="displayCreditsLeft">
+              $188.40 <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">/ $200.00</span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.55rem;">
+              Approx. <strong style="color: var(--accent-primary);" id="displayCreditsInr">₹15,640 INR</strong> credit pool
+            </div>
+            <div style="width: 100%; height: 5px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden;">
+              <div id="creditsProgressBar" style="width: 94.2%; height: 100%; background: linear-gradient(90deg, var(--accent-emerald), var(--accent-primary)); border-radius: 999px;"></div>
+            </div>
+          </div>
+
+          <!-- Tile 2: Live Hourly Burn Rate -->
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 1.1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <span style="font-size: 0.7rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">BURN RATE</span>
+              <span class="pill" id="burnRateBadge" style="padding: 0.15rem 0.55rem; font-size: 0.65rem;">$0.00/HR</span>
+            </div>
+            <div style="font-size: 1.45rem; font-weight: 800; font-family: var(--font-mono); margin-bottom: 0.2rem;" id="displayHourlyRate">
+              $0.096 <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">/ hr</span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">
+              Rate in INR: <strong style="color: #fff;">~₹8.00 / hour</strong>
+            </div>
+            <div style="font-size: 0.72rem; color: var(--accent-emerald); margin-top: 0.35rem;" id="burnRateStatusNote">
+              Deallocated: Compute is 100% free ($0.00/hr)
+            </div>
+          </div>
+
+          <!-- Tile 3: Estimated Runtime Runway -->
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 1.1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <span style="font-size: 0.7rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">RUNWAY ESTIMATE</span>
+              <span style="font-size: 0.72rem; color: var(--accent-primary); font-weight: 700;">ON SCHEDULE</span>
+            </div>
+            <div style="font-size: 1.45rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-primary); margin-bottom: 0.2rem;" id="displayRunway">
+              ~245 Days
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">
+              Daily schedule: <strong style="color: var(--accent-emerald);">~8.5 to 12 Months</strong>
+            </div>
+            <div style="font-size: 0.72rem; color: var(--text-dim); margin-top: 0.35rem;">
+              (+167 extra days saved vs 24/7)
+            </div>
+          </div>
+
+          <!-- Tile 4: Monthly Cost Optimization -->
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 1.1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <span style="font-size: 0.7rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">AUTO-SAVINGS</span>
+              <span style="font-size: 0.72rem; color: var(--accent-emerald); font-weight: 700;">67% SAVED</span>
+            </div>
+            <div style="font-size: 1.45rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-emerald); margin-bottom: 0.2rem;">
+              -$47.04 <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">/ month</span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">
+              Estimated cost: <strong style="color: #fff;">~$23.04</strong> (vs $70.08 unmanaged)
+            </div>
+            <div style="font-size: 0.72rem; color: var(--accent-primary); margin-top: 0.35rem;">
+              Preserves free tier for entire year
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Allocated Hardware Resources Row -->
+        <div style="border-top: 1px solid var(--border-card); padding-top: 1rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem;">
+          <div>
+            <span style="font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600; display: block;">VM SIZE</span>
+            <span style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: #fff;">Standard_D2as_v4</span>
+          </div>
+          <div>
+            <span style="font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600; display: block;">VCPU CORES</span>
+            <span style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--accent-primary);">2 Cores (AMD EPYC™)</span>
+          </div>
+          <div>
+            <span style="font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600; display: block;">DEDICATED RAM</span>
+            <span style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--accent-secondary);">8 GB High-Speed DDR4</span>
+          </div>
+          <div>
+            <span style="font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600; display: block;">STORAGE DISK</span>
+            <span style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: #fff;">32 GB Premium SSD</span>
+          </div>
+          <div>
+            <span style="font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; font-weight: 600; display: block;">REGION</span>
+            <span style="font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; color: var(--accent-emerald);">Central India (Pune)</span>
           </div>
         </div>
 
       </div>
 
-      <!-- Card 3: Metrics - Server Health -->
-      <div class="card card-metric">
-        <div class="card-title">
-          <span>Tick Rate & Engine</span>
-        </div>
-        <div style="font-size: 1.8rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-primary);" id="metricServerTick">
-          60.0 <span style="font-size: 0.85rem; color: var(--text-dim); font-weight: normal;">Ticks/s</span>
-        </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;">
-          Multithreading enabled. Unreal Engine dedicated server optimal loop.
-        </p>
-      </div>
-
-      <!-- Card 4: Metrics - Auto Backup -->
-      <div class="card card-metric">
-        <div class="card-title">
-          <span>Automated Backups</span>
-        </div>
-        <div style="font-size: 1.8rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-emerald);">
-          Active <span style="font-size: 0.85rem; color: var(--text-dim); font-weight: normal;">(Daily)</span>
-        </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;">
-          Preserving world saves with 7-day retention in Azure storage volume.
-        </p>
-      </div>
-
-      <!-- Card 5: Metrics - Community Status -->
-      <div class="card card-metric">
-        <div class="card-title">
-          <span>Server Type</span>
-        </div>
-        <div style="font-size: 1.8rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-secondary);" id="serverTypeVal">
-          Private
-        </div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.4rem;">
-          Password-protected server. Direct IP connection only.
-        </p>
-      </div>
-
-      <!-- Card 6: Live Player Roster -->
-      <div class="card card-full">
-        <div class="card-title">
-          <span>Currently Connected Players</span>
-          <span style="font-size: 0.75rem; color: var(--text-dim);" id="lastUpdatedLabel">Live from REST API</span>
-        </div>
-
-        <div style="overflow-x: auto;">
-          <table class="players-table">
-            <thead>
-              <tr>
-                <th>Player Name</th>
-                <th>Player ID / Steam</th>
-                <th>Session Time</th>
-                <th>Ping</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="playersTableBody">
-              <!-- Dynamically populated or empty state -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- How to Join Accordion / Card -->
-    <div class="card" style="border-left: 3px solid var(--accent-primary);">
-      <h3 style="font-size: 1rem; margin-bottom: 0.6rem; color: var(--accent-primary);">🎮 How to Connect to this Server</h3>
-      <ol style="padding-left: 1.25rem; font-size: 0.875rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.35rem;">
-        <li>Launch <strong>Palworld</strong> on your PC or Console.</li>
-        <li>Select <strong>Join Multiplayer Game</strong> from the main menu.</li>
-        <li>At the bottom of the server browser screen, enter the address: <code style="color: var(--accent-primary); background: rgba(0,0,0,0.3); padding: 0.15rem 0.4rem; border-radius: 4px;" id="guideAddress">20.120.45.182:8211</code></li>
-        <li>If prompted, enter the server password.</li>
-        <li>Click <strong>Connect</strong> to begin adventuring!</li>
-      </ol>
     </div>
 
   </div>
 
-  <!-- Settings / Config Modal -->
-  <div class="modal-backdrop" id="settingsModal">
-    <div class="modal-window">
-      <div class="modal-header">
-        <h3>Server Dashboard Settings</h3>
-        <button class="toggle-visibility-btn" onclick="closeSettingsModal()">✕</button>
+  <!-- Confirmation Modal for Power Actions -->
+  <div class="modal-overlay" id="powerModal">
+    <div class="modal-box">
+      <div class="modal-title" id="modalTitle">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span id="modalTitleText">Confirm Action</span>
       </div>
-      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">
-        Update your Azure server IP and connection details. These settings are saved in your browser.
-      </p>
-
-      <div class="field-group">
-        <label class="field-label">SERVER NAME</label>
-        <input type="text" id="cfgServerName" class="input-control" value="Palworld Dedicated Server on Azure">
+      <div class="modal-body" id="modalBodyText">
+        Are you sure you want to proceed?
       </div>
-
-      <div class="field-group">
-        <label class="field-label">SERVER PUBLIC IP OR DOMAIN</label>
-        <input type="text" id="cfgServerIp" class="input-control" placeholder="e.g. 20.120.45.182" value="20.120.45.182">
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-        <div class="field-group">
-          <label class="field-label">GAME PORT</label>
-          <input type="number" id="cfgGamePort" class="input-control" value="8211">
-        </div>
-        <div class="field-group">
-          <label class="field-label">REST API PORT</label>
-          <input type="number" id="cfgApiPort" class="input-control" value="8212">
-        </div>
-      </div>
-
-      <div class="field-group">
-        <label class="field-label">SERVER PASSWORD</label>
-        <input type="text" id="cfgPassword" class="input-control" value="worldofpals">
-      </div>
-
-      <div class="field-group">
-        <label class="field-label">ADMIN PASSWORD (FOR REST API)</label>
-        <input type="password" id="cfgAdminPassword" class="input-control" placeholder="Admin password for fetching metrics">
-      </div>
-
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem;">
-        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; cursor: pointer;">
-          <input type="checkbox" id="cfgDemoMode" checked>
-          <span>Use Simulated Data if API Unreachable</span>
-        </label>
-        <div style="display: flex; gap: 0.75rem;">
-          <button class="btn" onclick="closeSettingsModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="saveSettings()">Save & Refresh</button>
-        </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closePowerModal()">Cancel</button>
+        <button class="btn btn-danger" id="modalConfirmBtn" onclick="confirmPowerAction()">Confirm</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification element -->
-  <div class="toast" id="toast">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-emerald)" stroke-width="2">
-      <polyline points="20 6 9 17 4 12"></polyline>
-    </svg>
-    <span id="toastMsg">Notification message</span>
-  </div>
+  <div class="toast" id="toast">Notification</div>
 
   <script>
-    // State management & Configuration defaults
-    const DEFAULT_CONFIG = {
-      serverName: "Palworld Dedicated Server on Azure",
-      serverIp: "20.120.45.182",
-      gamePort: "8211",
-      apiPort: "8212",
-      queryPort: "27015",
-      password: "worldofpals",
-      adminPassword: "",
-      demoMode: true,
+    // Dynamic server configuration populated from backend environment variables (/api/config)
+    let SERVER_CONFIG = {
+      ip: '',
+      gamePort: 8211,
+      queryPort: 27015,
+      apiPort: 8212,
+      password: '',
+      serverName: 'Palworld Dedicated Server',
       maxPlayers: 16
     };
 
-    let config = { ...DEFAULT_CONFIG };
-    let isPasswordRevealed = false;
-    let countdownSec = 10;
-    let countdownInterval;
+    let isPasswordShown = false;
+    let countdown = 10;
+    let isActionInProgress = false;
 
-    // Load from localStorage if available
-    function loadConfig() {
-      const saved = localStorage.getItem("palworld_dashboard_config");
-      if (saved) {
-        try {
-          config = { ...DEFAULT_CONFIG, ...JSON.parse(saved) };
-        } catch (e) {
-          console.error("Failed to parse config", e);
-        }
-      }
-      updateDomWithConfig();
-    }
-
-    function saveSettings() {
-      config.serverName = document.getElementById("cfgServerName").value.trim() || DEFAULT_CONFIG.serverName;
-      config.serverIp = document.getElementById("cfgServerIp").value.trim() || DEFAULT_CONFIG.serverIp;
-      config.gamePort = document.getElementById("cfgGamePort").value.trim() || DEFAULT_CONFIG.gamePort;
-      config.apiPort = document.getElementById("cfgApiPort").value.trim() || DEFAULT_CONFIG.apiPort;
-      config.password = document.getElementById("cfgPassword").value;
-      config.adminPassword = document.getElementById("cfgAdminPassword").value;
-      config.demoMode = document.getElementById("cfgDemoMode").checked;
-
-      localStorage.setItem("palworld_dashboard_config", JSON.stringify(config));
-      updateDomWithConfig();
-      closeSettingsModal();
-      showToast("Configuration saved!");
-      fetchServerStatus(true);
-    }
-
-    function updateDomWithConfig() {
-      document.getElementById("uiServerName").textContent = config.serverName;
-      const addr = `${config.serverIp}:${config.gamePort}`;
-      document.getElementById("displayConnectAddress").textContent = addr;
-      document.getElementById("guideAddress").textContent = addr;
-      document.getElementById("displayGamePort").textContent = config.gamePort;
-      document.getElementById("displayQueryPort").textContent = config.queryPort;
-      
-      updatePasswordDisplay();
-    }
-
-    function updatePasswordDisplay() {
-      const passSpan = document.getElementById("displayPassword");
-      if (isPasswordRevealed) {
-        passSpan.textContent = config.password || "(None)";
-        passSpan.style.letterSpacing = "normal";
-      } else {
-        passSpan.textContent = "••••••••••••";
-        passSpan.style.letterSpacing = "0.15em";
+    function togglePassword() {
+      isPasswordShown = !isPasswordShown;
+      const el = document.getElementById('displayPassword');
+      if (el) {
+        el.textContent = isPasswordShown ? (SERVER_CONFIG.password || 'None') : '••••••••••';
       }
     }
 
-    function togglePasswordVisibility() {
-      isPasswordRevealed = !isPasswordRevealed;
-      updatePasswordDisplay();
+    function copyText(id, msg) {
+      const text = document.getElementById(id).textContent;
+      navigator.clipboard.writeText(text).then(() => showToast(msg));
     }
 
-    function copyToClipboard(elementId, successMsg) {
-      const text = document.getElementById(elementId).innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        showToast(successMsg);
-      });
-    }
-
-    function copyPasswordValue(successMsg) {
-      navigator.clipboard.writeText(config.password).then(() => {
-        showToast(successMsg);
-      });
+    function copyRawPassword(msg) {
+      navigator.clipboard.writeText(SERVER_CONFIG.password || '').then(() => showToast(msg));
     }
 
     function showToast(msg) {
-      const toast = document.getElementById("toast");
-      document.getElementById("toastMsg").textContent = msg;
-      toast.classList.add("show");
-      setTimeout(() => {
-        toast.classList.remove("show");
-      }, 2500);
+      const t = document.getElementById('toast');
+      if (t) {
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+      }
     }
 
-    // Settings Modal handlers
-    function openSettingsModal() {
-      document.getElementById("cfgServerName").value = config.serverName;
-      document.getElementById("cfgServerIp").value = config.serverIp;
-      document.getElementById("cfgGamePort").value = config.gamePort;
-      document.getElementById("cfgApiPort").value = config.apiPort;
-      document.getElementById("cfgPassword").value = config.password;
-      document.getElementById("cfgAdminPassword").value = config.adminPassword;
-      document.getElementById("cfgDemoMode").checked = config.demoMode;
+    // Universal API fetcher: talks to backend API endpoints (/api/status, /api/power, /api/config)
+    async function apiFetch(endpoint, options = {}) {
+      // If opened directly from disk via file:///, immediately target local backend server on 5050
+      if (window.location.protocol === 'file:') {
+        try {
+          const res = await fetch(`http://localhost:5050${endpoint}`, { ...options, signal: AbortSignal.timeout(4000) });
+          const ctype = res.headers.get('content-type') || '';
+          if (res.ok && ctype.includes('application/json')) {
+            return await res.json();
+          }
+        } catch (_) {}
 
-      document.getElementById("settingsModal").classList.add("open");
+        try {
+          const res = await fetch(`http://127.0.0.1:5050${endpoint}`, { ...options, signal: AbortSignal.timeout(4000) });
+          const ctype = res.headers.get('content-type') || '';
+          if (res.ok && ctype.includes('application/json')) {
+            return await res.json();
+          }
+        } catch (_) {}
+        return null;
+      }
+
+      // If served over HTTP (localhost:5050 or Vercel or Cloud), try relative URL first
+      try {
+        const res = await fetch(endpoint, { ...options, signal: AbortSignal.timeout(3500) });
+        const ctype = res.headers.get('content-type') || '';
+        if (res.ok && ctype.includes('application/json')) {
+          return await res.json();
+        }
+      } catch (_) {}
+
+      // Fallback to local server on port 5050
+      try {
+        const res = await fetch(`http://localhost:5050${endpoint}`, { ...options, signal: AbortSignal.timeout(3500) });
+        const ctype = res.headers.get('content-type') || '';
+        if (res.ok && ctype.includes('application/json')) {
+          return await res.json();
+        }
+      } catch (_) {}
+
+      return null;
     }
 
-    function closeSettingsModal() {
-      document.getElementById("settingsModal").classList.remove("open");
+    function updateConfigDisplay() {
+      const connectAddr = SERVER_CONFIG.ip ? `${SERVER_CONFIG.ip}:${SERVER_CONFIG.gamePort}` : 'Loading...';
+      const dispAddr = document.getElementById('displayConnectAddress');
+      if (dispAddr) dispAddr.textContent = connectAddr;
+
+      const guideAddr = document.getElementById('guideConnectAddress');
+      if (guideAddr) guideAddr.textContent = connectAddr;
+
+      const guidePw = document.getElementById('guidePassword');
+      if (guidePw) guidePw.textContent = SERVER_CONFIG.password || '(No Password)';
+
+      const dispPw = document.getElementById('displayPassword');
+      if (dispPw) dispPw.textContent = isPasswordShown ? (SERVER_CONFIG.password || 'None') : '••••••••••';
+
+      if (SERVER_CONFIG.serverName) {
+        const titleEl = document.getElementById('uiServerName');
+        if (titleEl) titleEl.textContent = SERVER_CONFIG.serverName;
+      }
+
+      const gPort = document.getElementById('uiGamePort');
+      if (gPort) gPort.textContent = SERVER_CONFIG.gamePort || 8211;
+      const qPort = document.getElementById('uiQueryPort');
+      if (qPort) qPort.textContent = SERVER_CONFIG.queryPort || 27015;
+      const aPort = document.getElementById('uiApiPort');
+      if (aPort) aPort.textContent = SERVER_CONFIG.apiPort || 8212;
     }
 
-    // Update Player Ring Visuals
-    function updatePlayerRing(current, max) {
-      document.getElementById("playerCountVal").textContent = current;
-      document.getElementById("playerMaxVal").textContent = `/ ${max}`;
-      document.getElementById("detailOnlineCount").textContent = `${current} Players`;
-      document.getElementById("detailFreeSlots").textContent = `${Math.max(0, max - current)} Slots`;
-
-      // Circumference = 2 * PI * 42 = ~263.89
-      const totalCircumference = 263.89;
-      const fillOffset = totalCircumference - (totalCircumference * (current / max));
-      document.getElementById("playerRingCircle").style.strokeDashoffset = fillOffset;
+    // Fetch Public Config from Backend
+    async function fetchConfig() {
+      const data = await apiFetch('/api/config');
+      if (data) {
+        if (data.ip) SERVER_CONFIG.ip = data.ip;
+        if (data.gamePort) SERVER_CONFIG.gamePort = data.gamePort;
+        if (data.queryPort) SERVER_CONFIG.queryPort = data.queryPort;
+        if (data.apiPort) SERVER_CONFIG.apiPort = data.apiPort;
+        if (data.password !== undefined) SERVER_CONFIG.password = data.password;
+        if (data.serverName) SERVER_CONFIG.serverName = data.serverName;
+        updateConfigDisplay();
+      }
     }
 
-    // Mock Sample Players for Demo mode
-    const DEMO_PLAYERS = [
-      { name: "PalTamer_Alex", id: "steam_76561198012345678", sessionTime: "1h 42m", ping: "28ms" },
-      { name: "ShadowBeast99", id: "steam_76561198087654321", sessionTime: "45m", ping: "35ms" },
-      { name: "ChikipiKing", id: "steam_76561198099887766", sessionTime: "12m", ping: "22ms" }
-    ];
+    // Fetch Real Live Status
+    async function fetchLiveStatus(isManual = false) {
+      if (isManual) {
+        document.getElementById('refreshLabel').textContent = 'Querying...';
+      }
 
-    function renderPlayersTable(players) {
-      const tbody = document.getElementById("playersTableBody");
+      const t0 = performance.now();
+      let isOnline = false;
+      let players = [];
+      let serverName = SERVER_CONFIG.serverName || 'Palworld Dedicated Server';
+      let version = 'v1.0.5';
+
+      const data = await apiFetch('/api/status');
+      if (data && (data.online || data.servername || data.version)) {
+        isOnline = true;
+        serverName = data.serverName || data.servername || serverName;
+        version = data.version || version;
+        players = data.players || [];
+        if (data.ip) SERVER_CONFIG.ip = data.ip;
+        if (data.gamePort) SERVER_CONFIG.gamePort = data.gamePort;
+        if (data.password !== undefined) SERVER_CONFIG.password = data.password;
+        updateConfigDisplay();
+      } else if (data && data.ip) {
+        SERVER_CONFIG.ip = data.ip;
+        updateConfigDisplay();
+      }
+
+      const latency = Math.round(performance.now() - t0);
+
+      // Update UI
+      const pill = document.getElementById('statusPill');
+      const statusText = document.getElementById('statusText');
+      const latencyVal = document.getElementById('latencyVal');
+      const versionText = document.getElementById('versionText');
+      const bannerStartBtn = document.getElementById('bannerStartBtn');
+
+      if (isOnline) {
+        pill.classList.remove('offline');
+        pill.classList.remove('starting');
+        statusText.textContent = 'ONLINE';
+        if (latencyVal) latencyVal.textContent = `${latency} ms`;
+        if (versionText) versionText.textContent = `Palworld ${version} (Healthy & Ready)`;
+        if (bannerStartBtn) bannerStartBtn.style.display = 'none';
+        updatePlayers(players);
+      } else if (data && data.vmPowerState && data.vmPowerState.toLowerCase().includes('starting')) {
+        pill.classList.remove('offline');
+        pill.classList.add('starting');
+        statusText.textContent = 'STARTING UP...';
+        if (latencyVal) latencyVal.textContent = 'Booting...';
+        if (versionText) versionText.textContent = 'Azure VM is booting hardware & launching Palworld container (~30s)...';
+        if (bannerStartBtn) bannerStartBtn.style.display = 'none';
+        updatePlayers([]);
+      } else {
+        pill.classList.remove('starting');
+        pill.classList.add('offline');
+        statusText.textContent = 'OFFLINE / STOPPED';
+        if (latencyVal) latencyVal.textContent = 'Timeout';
+        if (versionText) versionText.textContent = 'Server is currently offline or deallocated (credits saved)';
+        if (bannerStartBtn && !isActionInProgress) bannerStartBtn.style.display = 'inline-flex';
+        updatePlayers([]);
+      }
+
+      if (isManual) {
+        document.getElementById('refreshLabel').textContent = 'Refresh';
+        countdown = 10;
+      }
+
+      // Check VM power state in background
+      checkPowerState();
+    }
+
+    function updatePlayers(players) {
+      const count = players ? players.length : 0;
+      const countEl = document.getElementById('playerCount');
+      if (countEl) countEl.textContent = count;
+      const onlineEl = document.getElementById('detailPlayersOnline');
+      if (onlineEl) onlineEl.textContent = `${count} Players`;
+      const freeEl = document.getElementById('detailFreeSlots');
+      if (freeEl) freeEl.textContent = `${Math.max(0, 16 - count)} Slots`;
+
+      // Update ring
+      const offset = 263.89 - (263.89 * (count / 16));
+      const pRing = document.getElementById('playerRing');
+      if (pRing) pRing.style.strokeDashoffset = offset;
+
+      const tbody = document.getElementById('playerTableBody');
+      if (!tbody) return;
+
       if (!players || players.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="5" class="empty-state">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M8 12h8"></path>
-              </svg>
-              <div>No players currently online. The Palpagos islands are quiet!</div>
-            </td>
-          </tr>
-        `;
+        tbody.innerHTML = '<span style="font-size: 0.8rem; color: var(--text-dim);">No tamers currently online. Ready to join!</span>';
         return;
       }
 
       tbody.innerHTML = players.map(p => `
-        <tr>
-          <td style="font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-emerald); display: inline-block;"></span>
-            ${p.name || 'Anonymous Tamer'}
-          </td>
-          <td style="font-family: var(--font-mono); color: var(--text-dim); font-size: 0.8rem;">
-            ${p.id || p.playerId || 'N/A'}
-          </td>
-          <td style="color: var(--text-muted);">${p.sessionTime || 'Active'}</td>
-          <td style="font-family: var(--font-mono); color: var(--accent-emerald);">${p.ping || '30ms'}</td>
-          <td>
-            <span style="background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">
-              In Game
-            </span>
-          </td>
-        </tr>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.25rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.82rem;">
+          <span style="font-weight: 600; color: #fff;">${p.name || 'Pal Tamer'}</span>
+          <span style="font-family: var(--font-mono); color: var(--accent-emerald); font-size: 0.75rem;">${p.ping || '20ms'}</span>
+        </div>
       `).join('');
     }
 
-    // Fetch Live Server Status (via Vercel Serverless /api/status or fallback)
-    async function fetchServerStatus(isManual = false) {
-      const pill = document.getElementById("statusPill");
-      const statusText = document.getElementById("statusText");
+    // Modal management for confirming power actions
+    let pendingAction = null;
 
-      if (isManual) {
-        document.getElementById("refreshLabel").textContent = "Checking...";
+    function requestPowerAction(action) {
+      if (isActionInProgress) {
+        showToast('Operation already in progress, please wait...');
+        return;
+      }
+      pendingAction = action;
+      const modal = document.getElementById('powerModal');
+      const titleText = document.getElementById('modalTitleText');
+      const bodyText = document.getElementById('modalBodyText');
+      const confirmBtn = document.getElementById('modalConfirmBtn');
+
+      if (action === 'stop' || action === 'off') {
+        titleText.textContent = 'Turn Off Palworld Server?';
+        bodyText.innerHTML = 'Are you sure you want to turn off the server?<br><br>• An in-game world save will be triggered first to preserve player progress.<br>• The Azure VM will be deallocated to completely halt compute billing (<strong>$0.00/hr</strong>).';
+        confirmBtn.className = 'btn btn-danger';
+        confirmBtn.textContent = 'Turn Off Server';
+      } else if (action === 'restart') {
+        titleText.textContent = 'Restart Palworld Server?';
+        bodyText.innerHTML = 'Are you sure you want to reboot the server?<br><br>• Current player progress will be saved.<br>• Azure VM & Palworld container will reboot (~60-90s).';
+        confirmBtn.className = 'btn btn-warning';
+        confirmBtn.textContent = 'Restart Server';
       }
 
-      const startTime = performance.now();
-      let isOnline = false;
-      let players = [];
-      let currentPlayers = 0;
-      let maxPlayers = config.maxPlayers || 16;
-      let fps = 60.0;
+      if (modal) modal.classList.add('open');
+    }
+
+    function closePowerModal() {
+      const modal = document.getElementById('powerModal');
+      if (modal) modal.classList.remove('open');
+      pendingAction = null;
+    }
+
+    function confirmPowerAction() {
+      const action = pendingAction;
+      closePowerModal();
+      if (action) {
+        handlePowerAction(action);
+      }
+    }
+
+    // Power API integration & button state sync
+    async function checkPowerState() {
+      try {
+        const d = await apiFetch('/api/power');
+        if (d && d.success) {
+          const badge = document.getElementById('powerStateBadge');
+          const isStarting = d.powerState && d.powerState.toLowerCase().includes('starting');
+          const isOnline = d.isOnline || (d.powerState && d.powerState.toLowerCase().includes('running'));
+
+          if (badge) {
+            badge.textContent = d.powerState || (isOnline ? 'RUNNING' : 'DEALLOCATED');
+            badge.style.color = isOnline ? 'var(--accent-emerald)' : (isStarting ? 'var(--accent-amber)' : 'var(--accent-rose)');
+          }
+
+          if (!isActionInProgress) {
+            syncPowerButtons(isOnline);
+          }
+
+          if (d.resources) {
+            updateResourceDisplay(d.resources, isOnline);
+          }
+
+          if (d.schedule) {
+            if (d.schedule.display) {
+              document.getElementById('displaySchedule').textContent = d.schedule.display;
+            }
+            if (d.schedule.startTime) {
+              document.getElementById('inputStartTime').value = d.schedule.startTime;
+            }
+            if (d.schedule.stopTime) {
+              document.getElementById('inputStopTime').value = d.schedule.stopTime;
+            }
+          }
+        }
+      } catch (_) {}
+    }
+
+    function updateResourceDisplay(r, isOnline) {
+      if (!r) return;
+      const creditsLeft = document.getElementById('displayCreditsLeft');
+      if (creditsLeft) creditsLeft.innerHTML = `$${r.leftoverCreditsUsd.toFixed(2)} <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">/ $${r.totalCreditsUsd.toFixed(2)}</span>`;
+
+      const creditsInr = document.getElementById('displayCreditsInr');
+      if (creditsInr) creditsInr.textContent = `₹${r.leftoverCreditsInr.toLocaleString()} INR`;
+
+      const creditsPercent = document.getElementById('creditsPercentBadge');
+      if (creditsPercent) creditsPercent.textContent = `${r.creditsPercentLeft}% INTACT`;
+
+      const pBar = document.getElementById('creditsProgressBar');
+      if (pBar) pBar.style.width = `${r.creditsPercentLeft}%`;
+
+      const burnBadge = document.getElementById('burnRateBadge');
+      const hourlyRate = document.getElementById('displayHourlyRate');
+      const burnNote = document.getElementById('burnRateStatusNote');
+
+      if (isOnline) {
+        if (burnBadge) {
+          burnBadge.className = 'pill';
+          burnBadge.textContent = `$${r.hourlyRateUsd.toFixed(3)}/HR (ACTIVE)`;
+          burnBadge.style.color = 'var(--accent-primary)';
+          burnBadge.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+          burnBadge.style.background = 'rgba(56, 189, 248, 0.15)';
+        }
+        if (hourlyRate) hourlyRate.innerHTML = `$${r.hourlyRateUsd.toFixed(3)} <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">/ hr (~₹${r.hourlyRateInr.toFixed(2)}/hr)</span>`;
+        if (burnNote) {
+          burnNote.textContent = 'Server is running: Standard_D2as_v4 compute billing active';
+          burnNote.style.color = 'var(--accent-primary)';
+        }
+      } else {
+        if (burnBadge) {
+          burnBadge.className = 'pill';
+          burnBadge.textContent = '$0.00/HR (FREE)';
+          burnBadge.style.color = 'var(--accent-emerald)';
+          burnBadge.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+          burnBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+        }
+        if (hourlyRate) hourlyRate.innerHTML = `$0.00 <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">/ hr ($0.096/hr paused)</span>`;
+        if (burnNote) {
+          burnNote.textContent = 'Deallocated: Compute is 100% free ($0.00/hr, credits saved)';
+          burnNote.style.color = 'var(--accent-emerald)';
+        }
+      }
+
+      const runway = document.getElementById('displayRunway');
+      if (runway) runway.textContent = `~${r.runwayScheduledDays} Days`;
+    }
+
+    function syncPowerButtons(isOnline) {
+      // Start buttons
+      const startBtns = [
+        document.getElementById('btnStartServer'),
+        document.getElementById('btnHeaderStart')
+      ];
+      // Stop buttons
+      const stopBtns = [
+        document.getElementById('btnStopServer'),
+        document.getElementById('btnHeaderStop')
+      ];
+      // Restart buttons
+      const restartBtns = [
+        document.getElementById('btnRestartServer'),
+        document.getElementById('btnHeaderRestart')
+      ];
+      // Banner buttons
+      const bannerStart = document.getElementById('bannerStartBtn');
+      const bannerStop = document.getElementById('bannerStopBtn');
+
+      if (isOnline) {
+        startBtns.forEach(btn => {
+          if (btn) {
+            btn.classList.remove('btn-pulse');
+            btn.style.opacity = '0.45';
+            btn.style.cursor = 'default';
+            btn.title = 'Server is currently running';
+          }
+        });
+        stopBtns.forEach(btn => {
+          if (btn) {
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+            btn.title = 'Turn off Azure VM & stop compute charges';
+          }
+        });
+        restartBtns.forEach(btn => {
+          if (btn) {
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+            btn.title = 'Restart Palworld server';
+          }
+        });
+        if (bannerStart) bannerStart.style.display = 'none';
+        if (bannerStop) bannerStop.style.display = 'inline-flex';
+      } else {
+        startBtns.forEach(btn => {
+          if (btn) {
+            btn.classList.add('btn-pulse');
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+            btn.title = 'Start Azure VM & Palworld server';
+          }
+        });
+        stopBtns.forEach(btn => {
+          if (btn) {
+            btn.style.opacity = '0.45';
+            btn.style.cursor = 'default';
+            btn.title = 'Server is already turned off';
+          }
+        });
+        restartBtns.forEach(btn => {
+          if (btn) {
+            btn.style.opacity = '0.45';
+            btn.style.cursor = 'default';
+            btn.title = 'Server is currently offline';
+          }
+        });
+        if (bannerStart) bannerStart.style.display = 'inline-flex';
+        if (bannerStop) bannerStop.style.display = 'none';
+      }
+    }
+
+    async function handlePowerAction(action) {
+      if (isActionInProgress) {
+        showToast('Operation already in progress, please wait...');
+        return;
+      }
+
+      isActionInProgress = true;
+      const startText = document.getElementById('startBtnText');
+      const headerStartLabel = document.getElementById('headerStartLabel');
+      const bannerStartText = document.getElementById('bannerStartText');
+
+      const stopText = document.getElementById('stopBtnText');
+      const headerStopLabel = document.getElementById('headerStopLabel');
+
+      const restartText = document.getElementById('restartBtnText');
+      const headerRestartLabel = document.getElementById('headerRestartLabel');
+
+      if (action === 'start') {
+        if (startText) startText.textContent = 'Starting (~60s)...';
+        if (headerStartLabel) headerStartLabel.textContent = 'Starting...';
+        if (bannerStartText) bannerStartText.textContent = 'Starting VM...';
+        showToast('Sending START command to Azure Cloud...');
+      } else if (action === 'stop' || action === 'off') {
+        if (stopText) stopText.textContent = 'Turning Off...';
+        if (headerStopLabel) headerStopLabel.textContent = 'Turning Off...';
+        showToast('Saving world & turning off Azure VM...');
+      } else if (action === 'restart') {
+        if (restartText) restartText.textContent = 'Restarting...';
+        if (headerRestartLabel) headerRestartLabel.textContent = 'Restarting...';
+        showToast('Sending RESTART command to Azure...');
+      }
 
       try {
-        // Attempt to call Vercel Serverless proxy endpoint
-        const response = await fetch(`/api/status?ip=${encodeURIComponent(config.serverIp)}&port=${config.apiPort}`, {
-          signal: AbortSignal.timeout(3500)
+        const data = await apiFetch('/api/power', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action })
         });
 
-        if (response.ok) {
-          const data = await response.json();
-          isOnline = data.online;
-          currentPlayers = data.currentPlayers || 0;
-          maxPlayers = data.maxPlayers || 16;
-          players = data.players || [];
-          fps = data.fps || 60.0;
+        if (data && data.success) {
+          showToast(data.message || 'Azure command accepted.');
+
+          // Poll every 5s for up to 60s
+          let attempts = 0;
+          const pollTimer = setInterval(async () => {
+            attempts++;
+            await checkPowerState();
+            await fetchLiveStatus();
+            if (attempts >= 12) {
+              clearInterval(pollTimer);
+              isActionInProgress = false;
+              resetButtonLabels();
+              checkPowerState();
+            }
+          }, 5000);
         } else {
-          throw new Error("Direct proxy not available");
+          showToast(data?.error || 'Command failed.');
+          isActionInProgress = false;
+          resetButtonLabels();
         }
       } catch (err) {
-        // Fallback for standalone demo / local preview
-        if (config.demoMode) {
-          isOnline = true;
-          players = DEMO_PLAYERS;
-          currentPlayers = DEMO_PLAYERS.length;
+        showToast(`Action error: ${err.message}`);
+        isActionInProgress = false;
+        resetButtonLabels();
+      }
+    }
+
+    function resetButtonLabels() {
+      const startText = document.getElementById('startBtnText');
+      const headerStartLabel = document.getElementById('headerStartLabel');
+      const bannerStartText = document.getElementById('bannerStartText');
+
+      const stopText = document.getElementById('stopBtnText');
+      const headerStopLabel = document.getElementById('headerStopLabel');
+
+      const restartText = document.getElementById('restartBtnText');
+      const headerRestartLabel = document.getElementById('headerRestartLabel');
+
+      if (startText) startText.textContent = 'Start Server';
+      if (headerStartLabel) headerStartLabel.textContent = 'Start Server';
+      if (bannerStartText) bannerStartText.textContent = 'Start Server Now';
+
+      if (stopText) stopText.textContent = 'Turn Off Server';
+      if (headerStopLabel) headerStopLabel.textContent = 'Turn Off Server';
+
+      if (restartText) restartText.textContent = 'Restart';
+      if (headerRestartLabel) headerRestartLabel.textContent = 'Restart';
+    }
+
+    async function updateAutoShutdown() {
+      const startTime = document.getElementById('inputStartTime').value || '08:00';
+      const stopTime = document.getElementById('inputStopTime').value || '00:00';
+
+      showToast(`Updating schedule: ${startTime} to ${stopTime}...`);
+      try {
+        const data = await apiFetch('/api/power', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'schedule', startTime, stopTime })
+        });
+        if (data && data.success) {
+          showToast(data.message || 'Schedule updated!');
+          if (data.schedule && data.schedule.display) {
+            document.getElementById('displaySchedule').textContent = data.schedule.display;
+          }
         } else {
-          isOnline = false;
+          showToast(data?.error || 'Schedule updated on Azure!');
         }
-      }
-
-      const latency = Math.round(performance.now() - startTime);
-
-      // Update UI components
-      if (isOnline) {
-        pill.classList.remove("offline");
-        statusText.textContent = "ONLINE";
-        document.getElementById("pingValue").textContent = `${latency} ms`;
-        document.getElementById("fpsValue").textContent = fps.toFixed(1);
-        updatePlayerRing(currentPlayers, maxPlayers);
-        renderPlayersTable(players);
-      } else {
-        pill.classList.add("offline");
-        statusText.textContent = "OFFLINE";
-        document.getElementById("pingValue").textContent = "Timeout";
-        updatePlayerRing(0, maxPlayers);
-        renderPlayersTable([]);
-      }
-
-      if (isManual) {
-        document.getElementById("refreshLabel").textContent = "Refresh";
-        countdownSec = 10;
+      } catch (err) {
+        showToast(`Error: ${err.message}`);
       }
     }
 
-    // Auto-refresh countdown timer
-    function startCountdown() {
-      clearInterval(countdownInterval);
-      countdownSec = 10;
-      countdownInterval = setInterval(() => {
-        countdownSec--;
-        document.getElementById("countdownValue").textContent = `${countdownSec}s`;
-        if (countdownSec <= 0) {
-          countdownSec = 10;
-          fetchServerStatus();
-        }
-      }, 1000);
-    }
+    // 10s Countdown
+    setInterval(() => {
+      countdown--;
+      const cdEl = document.getElementById('countdownVal');
+      if (cdEl) cdEl.textContent = `${countdown}s`;
+      if (countdown <= 0) {
+        countdown = 10;
+        fetchLiveStatus();
+      }
+    }, 1000);
 
-    // Initialize on page load
-    window.addEventListener("DOMContentLoaded", () => {
-      loadConfig();
-      fetchServerStatus();
-      startCountdown();
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchConfig();
+      fetchLiveStatus();
     });
   </script>
 </body>
